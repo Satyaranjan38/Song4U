@@ -247,7 +247,7 @@ footer {
     }
 
     footer {
-        height: 30%;
+        height: 25%;
         padding: 0.5rem; /* Reduce padding */
         gap: 0.5rem; /* Reduce gap between elements */
         font-size: 0.8rem; /* Adjust font size if necessary */
