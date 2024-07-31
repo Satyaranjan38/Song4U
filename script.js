@@ -119,6 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentTrackAudio.currentTime = 0;
             }
 
+            if (!track.preview_url) {
+                console.error('No preview URL available for this track.');
+                return;
+            }
+
             currentTrackAudio = new Audio(track.preview_url);
             currentTrackAudio.play();
 
