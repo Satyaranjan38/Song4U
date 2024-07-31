@@ -15,6 +15,7 @@ header {
     align-items: center;
     padding: 1rem;
     background-color: #121212;
+    flex-wrap: wrap;
 }
 
 .logo {
@@ -25,10 +26,11 @@ header {
 
 #search-query {
     padding: 0.5rem;
-    width: 40%;
+    width: 100%;
+    max-width: 300px;
     border: none;
     border-radius: 20px;
-    margin-right: 10px;
+    margin: 10px 0;
 }
 
 #search-button {
@@ -76,6 +78,7 @@ main {
 
 #featured {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 1rem;
     background-color: #333;
@@ -84,14 +87,16 @@ main {
 }
 
 #featured img {
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    max-width: 200px;
+    height: auto;
     object-fit: cover;
     border-radius: 10px;
 }
 
 .info h2 {
     margin: 0;
+    text-align: center;
 }
 
 #popular {
@@ -154,6 +159,10 @@ footer {
     display: flex;
     align-items: center;
     gap: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    flex-wrap: wrap;
 }
 
 #current-track {
@@ -185,7 +194,8 @@ footer {
 }
 
 #current-track-seek-bar {
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
 }
 
 #controls {
@@ -200,4 +210,44 @@ footer {
     padding: 0.5rem 1rem;
     cursor: pointer;
     color: #1a1a1d;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #search-query {
+        width: calc(100% - 20px);
+        margin: 10px 10px 0 10px;
+    }
+
+    #search-button {
+        margin: 10px;
+    }
+
+    footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #current-track {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #current-track img {
+        margin-bottom: 10px;
+    }
+
+    #current-track-seek-bar {
+        margin: 10px 0;
+        width: calc(100% - 20px);
+    }
+
+    #controls {
+        justify-content: center;
+    }
 }
