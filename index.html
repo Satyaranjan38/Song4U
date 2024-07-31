@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #ffffff;
+            background-color: #1DB954;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1ed760;
+        }
+
+        #status-message {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login to Spotify</h1>
+    <button id="login-button">Sign in with Spotify</button>
+    <p id="status-message"></p>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginButton = document.getElementById('login-button');
+            const statusMessage = document.getElementById('status-message');
+
+            // Spotify credentials
+            const clientId = 'a0f2f4ca2cc041838080fcb91ce3bc0a'; // Replace with your client ID
+            const redirectUri = 'http://127.0.0.1:5500/'; // Base URI if handling callback in the same page
+            const scopes = 'user-read-private user-read-email'; // Define the scopes you need
+
+            // Function to initiate the login process
+            loginButton.addEventListener('click', () => {
+                const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
+                window.location.href = authUrl;
+            });
+
+            // Function to handle the Spotify redirect and extract the access token
+            function handleCallback() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const code = urlParams.get('code');
+
+                if (code) {
+                    const tokenUrl = 'https://accounts.spotify.com/api/token';
+                    const authHeaders = new Headers();
+                    authHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+                    const body = new URLSearchParams();
+                    body.append('grant_type', 'authorization_code');
+                    body.append('code', code);
+                    body.append('redirect_uri', redirectUri);
+                    body.append('client_id', clientId);
+                    body.append('client_secret', '197eb3860d844bd2ac51f0cb7c1945d1'); // Replace with your client secret
+
+                    fetch(tokenUrl, {
+                        method: 'POST',
+                        headers: authHeaders,
+                        body: body.toString()
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.access_token) {
+                            // Store the access token in local storage
+                            localStorage.setItem('access_token', data.access_token);
+                            localStorage.setItem('token_type', data.token_type);
+                            localStorage.setItem('expires_in', data.expires_in);
+                            localStorage.setItem('refresh_token', data.refresh_token || '');
+
+                            // Fetch user profile information
+                            fetch('https://api.spotify.com/v1/me', {
+                                headers: {
+                                    'Authorization': `Bearer ${data.access_token}`
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(profileData => {
+                                localStorage.setItem('display_name', profileData.display_name);
+                                localStorage.setItem('email', profileData.email);
+                                localStorage.setItem('profile_picture', profileData.images[0]?.url || '');
+
+                                statusMessage.textContent = 'Login successful! Token and profile saved to local storage.';
+                                
+                                // Redirect to your main page
+                                window.location.href = 'main.html'; // Redirect to your main page
+                            })
+                            .catch(error => {
+                                console.error('Error fetching user profile:', error);
+                                statusMessage.textContent = 'Failed to fetch user profile.';
+                            });
+                        } else {
+                            statusMessage.textContent = 'Failed to get access token.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching access token:', error);
+                        statusMessage.textContent = 'Failed to complete login.';
+                    });
+                }
+            }
+
+            // Check if the URL contains the authorization code and handle the callback
+            handleCallback();
+        });
+    </script>
+</body>
+</html>
