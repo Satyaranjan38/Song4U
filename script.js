@@ -74,44 +74,44 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error searching tracks:', error));
         }
 
-        function loadNewReleases() {
-            fetch(`https://api.spotify.com/v1/browse/new-releases?limit=${limit}&offset=${offset}`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
-            .then(response => {
-                if (response.status === 401) {
-                    // Redirect to login page if unauthorized
-                    window.location.href = 'index.html';
-                    return null;
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data) {
-                    const popularList = document.getElementById('popular-list');
-                    if (data.albums && data.albums.items) {
-                        data.albums.items.forEach(album => {
-                            const listItem = document.createElement('li');
-                            listItem.innerHTML = `
-                                <img src="${album.images[0]?.url || 'https://via.placeholder.com/50'}" alt="${album.name}">
-                                <div class="info">
-                                    <h3>${album.name}</h3>
-                                    <p>${album.artists.map(artist => artist.name).join(', ')}</p>
-                                </div>
-                            `;
-                            listItem.onclick = () => playTrack(album);
-                            popularList.appendChild(listItem);
-                        });
-                        offset += limit; // Update the offset for the next load
-                    } else {
-                        console.error('Unexpected response structure:', data);
-                    }
-                }
-            })
-            .catch(error => console.error('Error fetching new releases:', error));
-        }
+        // function loadNewReleases() {
+        //     fetch(`https://api.spotify.com/v1/browse/new-releases?limit=${limit}&offset=${offset}`, {
+        //         headers: {
+        //             Authorization: `Bearer ${accessToken}`
+        //         }
+        //     })
+        //     .then(response => {
+        //         if (response.status === 401) {
+        //             // Redirect to login page if unauthorized
+        //             window.location.href = 'index.html';
+        //             return null;
+        //         }
+        //         return response.json();
+        //     })
+        //     .then(data => {
+        //         if (data) {
+        //             const popularList = document.getElementById('popular-list');
+        //             if (data.albums && data.albums.items) {
+        //                 data.albums.items.forEach(album => {
+        //                     const listItem = document.createElement('li');
+        //                     listItem.innerHTML = `
+        //                         <img src="${album.images[0]?.url || 'https://via.placeholder.com/50'}" alt="${album.name}">
+        //                         <div class="info">
+        //                             <h3>${album.name}</h3>
+        //                             <p>${album.artists.map(artist => artist.name).join(', ')}</p>
+        //                         </div>
+        //                     `;
+        //                     listItem.onclick = () => playTrack(album);
+        //                     popularList.appendChild(listItem);
+        //                 });
+        //                 offset += limit; // Update the offset for the next load
+        //             } else {
+        //                 console.error('Unexpected response structure:', data);
+        //             }
+        //         }
+        //     })
+        //     .catch(error => console.error('Error fetching new releases:', error));
+        // }
 
         function playTrack(track) {
             if (currentTrackAudio) {
