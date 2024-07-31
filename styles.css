@@ -16,6 +16,7 @@ header {
     padding: 1rem;
     background-color: #121212;
     flex-wrap: wrap;
+    position: relative;
 }
 
 .logo {
@@ -24,13 +25,20 @@ header {
     color: #f39c12;
 }
 
+#search-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    max-width: 500px;
+}
+
 #search-query {
     padding: 0.5rem;
     width: 100%;
-    max-width: 300px;
     border: none;
     border-radius: 20px;
-    margin: 10px 0;
+    margin-right: 10px;
+    flex-grow: 1;
 }
 
 #search-button {
@@ -47,6 +55,9 @@ header {
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
 }
 
 #profile-picture {
@@ -219,13 +230,19 @@ footer {
         align-items: stretch;
     }
 
+    #search-container {
+        width: 100%;
+        max-width: 100%;
+    }
+
     #search-query {
-        width: calc(100% - 20px);
-        margin: 10px 10px 0 10px;
+        width: 100%;
+        margin-right: 10px;
     }
 
     #search-button {
-        margin: 10px;
+        width: auto;
+        margin: 10px 0;
     }
 
     footer {
@@ -249,5 +266,10 @@ footer {
 
     #controls {
         justify-content: center;
+    }
+
+    #profile {
+        right: 0.5rem;
+        top: 0.5rem;
     }
 }
